@@ -40,9 +40,9 @@ public class rain : MonoBehaviour
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlText);
 
-            XmlNode node = xmlDoc.SelectSingleNode(elementName);
+            XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
-            rainAmount.text = Convert.ToString(node.InnerText) + "mm";
+            rainAmount.text = Convert.ToString(node.InnerText) + " mm";
 
         }
     }

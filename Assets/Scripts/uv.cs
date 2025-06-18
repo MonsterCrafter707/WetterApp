@@ -40,9 +40,9 @@ public class uv : MonoBehaviour
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlText);
 
-            XmlNode node = xmlDoc.SelectSingleNode(elementName);
+            XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
-            uvIdx.text = Convert.ToString(node.InnerText) + "Index";
+            uvIdx.text = "Index " + Convert.ToString(node.InnerText);
 
         }
     }

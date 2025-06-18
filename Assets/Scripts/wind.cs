@@ -40,9 +40,9 @@ public class wind : MonoBehaviour
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlText);
 
-            XmlNode node = xmlDoc.SelectSingleNode(elementName);
+            XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
-            windspeed.text = Convert.ToString(node.InnerText) + "km/h";
+            windspeed.text = Convert.ToString(node.InnerText) + " km/h";
 
         }
     }
