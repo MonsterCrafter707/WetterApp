@@ -15,7 +15,7 @@ public class APITest : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //public Button fetchButton;  // Assign in Inspector
-    string url = "https://api.meteomatics.com/now--now+191H:PT1H/t_2m:C/postal_DE38106/xml?source=mix"; // Your XML link
+    string url = "https://api.meteomatics.com/now--now+191H:PT1H/t_2m:C/"+ "postal_DE38114" + "/xml?source=mix"; // Your XML link
 
     public TMP_Text[] mainText;
     public TMP_Text[] averageText;
