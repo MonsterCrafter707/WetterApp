@@ -5603,6 +5603,15 @@ MonoBehaviour:
   - {fileID: 1406561700}
   - {fileID: 542198973}
   - {fileID: 861486829}
+  catImage: {fileID: 862069897}
+  wetCat: {fileID: -6683068163243346103, guid: bc120cd244e4fcd46944756590fe99cc, type: 3}
+  wimdyCat: {fileID: 2498542331198629019, guid: 49353df2eb87547409ff347a885f411b, type: 3}
+  hellCat: {fileID: -575574162995363295, guid: 2eca8221b7f50f245a873b0bfbeb2c8c, type: 3}
+  mathCat: {fileID: 6415459809884863462, guid: 64526317f251d5b4b82e4469789822c1, type: 3}
+  happiCat: {fileID: -5908176973227796780, guid: 1c1df79dda2e7024d8807ff5a9aa2ce9, type: 3}
+  cursedCat: {fileID: -3586139084721298278, guid: 909fd921b86fc434ba91a864e365256d, type: 3}
+  rain: {fileID: 618724501}
+  wind: {fileID: 618724502}
 --- !u!114 &618724499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5654,6 +5663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rainAmount: {fileID: 286891905}
+  wetness: 0
 --- !u!114 &618724502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5667,6 +5677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windspeed: {fileID: 1013818063}
+  wimdy: 0
 --- !u!114 &618724503
 MonoBehaviour:
   m_ObjectHideFlags: 0

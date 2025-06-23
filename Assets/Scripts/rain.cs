@@ -14,6 +14,7 @@ public class rain : MonoBehaviour
 {
     string url = "https://api.meteomatics.com/now/precip_1h:mm/postal_DE38106/xml?source=mix"; // Your XML link
     public TMP_Text rainAmount;
+    public int wetness;
     public void OnFetchButtonClicked()
     {
         StartCoroutine(GetXMLValueFromUrl(url, "value"));
@@ -43,6 +44,7 @@ public class rain : MonoBehaviour
             XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
             rainAmount.text = Convert.ToString(node.InnerText) + " mm";
+          //  wetness = Convert.ToInt32(node.InnerText);
 
         }
     }

@@ -22,10 +22,20 @@ public class APITest : MonoBehaviour
     public TMP_Text[] maxText;
     public TMP_Text[] minText;
 
+    public Image catImage;
 
+    public Sprite wetCat;
+    public Sprite wimdyCat;
+    public Sprite hellCat;
+    public Sprite mathCat;
+    public Sprite happiCat;
+    public Sprite cursedCat;
+    public MonoBehaviour rain;
+    public MonoBehaviour wind;
     void Start()
     {
         //fetchButton.onClick.AddListener(OnFetchButtonClicked);
+        
     }
 
     public void OnFetchButtonClicked()
@@ -60,15 +70,19 @@ public class APITest : MonoBehaviour
 
             for (int i = 0; i < 25; i++)
             {
-                Debug.Log($"{elementName} value: {nodes[i].InnerText}");
+                //Debug.Log($"{elementName} value: {nodes[i].InnerText}");
                 mainText[i].text = Convert.ToString(nodes[i].InnerText) + "°C";
             }
+
+            rain rain = FindFirstObjectByType<rain>();
+            wind wind = FindFirstObjectByType<wind>();
+
 
             int time = 24 - DateTime.Now.Hour;
 
             float[] average = { 0, 0, 0, 0, 0, 0, 0 };
             float[] max = { 0, 0, 0, 0, 0, 0, 0 };
-            float[] min = { 1000, 1000, 1000,1000, 1000, 1000, 1000 };
+            float[] min = { 1000, 1000, 1000, 1000, 1000, 1000, 1000 };
 
             float[] values = new float[nodes.Count];
 
@@ -85,6 +99,28 @@ public class APITest : MonoBehaviour
                     values[i] = 0; // Or handle differently, e.g., skip or set to -1
                 }
             }
+           // if (wind.wimdy > 100)
+            {
+                catImage.sprite = wimdyCat;
+            }
+            /*else*/ if (rain.wetness > 50)
+            {
+                catImage.sprite = wetCat;
+            }
+            else if (values[0] > 250)
+            {
+                catImage.sprite = hellCat;
+               // Debug.Log(values[0]);
+            }
+            else if (values[0] > 200)
+            {
+                catImage.sprite = mathCat;
+            }
+            else if (values[0] > 150)
+            {
+                catImage.sprite = happiCat;
+            }
+
 
             int dayOne = time + 24;
             int dayTwo = time + 48;
@@ -181,6 +217,8 @@ public class APITest : MonoBehaviour
 
             }
             
+            
+
         }
     }
 

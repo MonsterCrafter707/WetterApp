@@ -14,6 +14,7 @@ public class wind : MonoBehaviour
 {
     string url = "https://api.meteomatics.com/now/wind_speed_10m:kmh/postal_DE38106/xml?source=mix"; // Your XML link
     public TMP_Text windspeed;
+    public int wimdy;
     public void OnFetchButtonClicked()
     {
         StartCoroutine(GetXMLValueFromUrl(url, "value"));
@@ -43,6 +44,7 @@ public class wind : MonoBehaviour
             XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
             windspeed.text = Convert.ToString(node.InnerText) + " km/h";
+           // wimdy = Convert.ToInt32(node);
 
         }
     }
