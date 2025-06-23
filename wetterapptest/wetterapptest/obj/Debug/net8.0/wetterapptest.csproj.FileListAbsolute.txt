@@ -1,0 +1,14 @@
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\bin\Debug\net8.0\wetterapptest.exe
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\bin\Debug\net8.0\wetterapptest.deps.json
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\bin\Debug\net8.0\wetterapptest.runtimeconfig.json
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\bin\Debug\net8.0\wetterapptest.dll
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\bin\Debug\net8.0\wetterapptest.pdb
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.AssemblyInfoInputs.cache
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.AssemblyInfo.cs
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.csproj.CoreCompileInputs.cache
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.dll
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\refint\wetterapptest.dll
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.pdb
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\wetterapptest.genruntimeconfig.cache
+C:\Users\RFalk\source\repos\wetterapptest\wetterapptest\obj\Debug\net8.0\ref\wetterapptest.dll
