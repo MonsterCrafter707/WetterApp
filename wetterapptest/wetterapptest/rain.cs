@@ -12,12 +12,12 @@ using Unity.VisualScripting;
 
 public class rain : MonoBehaviour
 {
-    string url = "https://api.meteomatics.com/now/precip_1h:mm/postal_DE38106/xml?source=mix"; // Your XML link
+    string urlRain = "https://api.meteomatics.com/now/precip_1h:mm/postal_DE38106/xml?source=mix"; // Your XML link
     public TMP_Text rainAmount;
     public int wetness;
     public void OnFetchButtonClicked()
     {
-        StartCoroutine(GetXMLValueFromUrl(url, "value"));
+        StartCoroutine(GetXMLValueFromUrl(urlRain, "value"));
 
 
         IEnumerator GetXMLValueFromUrl(string url, string elementName)

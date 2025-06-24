@@ -12,7 +12,7 @@ using Unity.VisualScripting;
 
 public class wind : MonoBehaviour
 {
-    string url = "https://api.meteomatics.com/now/wind_speed_10m:kmh/postal_DE38106/xml?source=mix"; // Your XML link
+    string urlWind = "https://api.meteomatics.com/now/wind_speed_10m:kmh/postal_DE38106/xml?source=mix"; // Your XML link
     public TMP_Text windspeed;
     public int wimdy;
     public void OnFetchButtonClicked()

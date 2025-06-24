@@ -1,26 +1,29 @@
 using System;
 using System.Xml;
 using UnityEngine;
-using System.Threading.Tasks;
-using System.IO;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
-using Unity.VisualScripting;
 
 public class APITest : MonoBehaviour
 {
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    //public Button fetchButton;  // Assign in Inspector
-    string url = "https://api.meteomatics.com/now--now+191H:PT1H/t_2m:C/"+ "postal_DE38114" + "/xml?source=mix"; // Your XML link
+    [System.Serializable]
+    public class Location
+    {
+        public string lat;
+        public string lon;
+    }
 
     public TMP_Text[] mainText;
     public TMP_Text[] averageText;
     public TMP_Text[] maxText;
     public TMP_Text[] minText;
+
+    public TMP_Text rainAmount;
+    public TMP_Text cityInput;
+    public TMP_Text windspeed;
+    public TMP_Text uvIdx;
 
     public Image catImage;
 
@@ -30,196 +33,213 @@ public class APITest : MonoBehaviour
     public Sprite mathCat;
     public Sprite happiCat;
     public Sprite cursedCat;
-    public MonoBehaviour rain;
-    public MonoBehaviour wind;
-    void Start()
-    {
-        //fetchButton.onClick.AddListener(OnFetchButtonClicked);
-        
-    }
+
+    //public rain rain;
+    //public wind wind;
+
+    string url;
 
     public void OnFetchButtonClicked()
     {
-        StartCoroutine(GetXMLValueFromUrl(url, "value"));
+        StartCoroutine(GetXMLValueFromUrl("value", cityInput.text));
+    }
 
+    private IEnumerator GetXMLValueFromUrl(string elementName, string cityName)
+    {
+        string urlLocation = $"https://nominatim.openstreetmap.org/search?q={UnityWebRequest.EscapeURL(cityName)}&format=json&limit=1";
+        UnityWebRequest request = UnityWebRequest.Get(urlLocation);
+        request.SetRequestHeader("User-Agent", "UnityApp/1.0");
 
-        IEnumerator GetXMLValueFromUrl(string url, string elementName)
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
         {
+            Debug.LogError("Error fetching coordinates: " + request.error);
+            Debug.Log("Requesting: " + urlLocation);
+            yield break;
+        }
 
-            UnityWebRequest www = UnityWebRequest.Get(url);
+        string json = request.downloadHandler.text;
+        Location[] locations = JsonHelper.FromJson<Location>(json);
 
-            string auth = System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("lavieggmbh_kaupert_alex:uCUJ5bw77Y"));
-            www.SetRequestHeader("Authorization", "Basic " + auth);
+        if (locations == null || locations.Length == 0)
+        {
+            Debug.LogWarning("City not found or JSON invalid.");
+            yield break;
+        }
 
-            yield return www.SendWebRequest();
+        
+        float lat = float.Parse(locations[0].lat, System.Globalization.CultureInfo.InvariantCulture);
+        float lon = float.Parse(locations[0].lon, System.Globalization.CultureInfo.InvariantCulture);
+
+        string latlon = Convert.ToString(lat).Replace(",", ".") + "," + Convert.ToString(lon).Replace(",", ".");
+
+        url = $"https://api.meteomatics.com/now--now+191H:PT1H/t_2m:C/{latlon}/xml?source=mix";
+        Debug.Log(url);
+
+        //Uses coords
+
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        string auth = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("lavieggmbh_kaupert_alex:uCUJ5bw77Y"));
+        www.SetRequestHeader("Authorization", "Basic " + auth);
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Error fetching XML: " + www.error);
+            yield break;
+        }
+
+        string xmlText = www.downloadHandler.text;
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xmlText);
+
+        XmlNodeList nodes = xmlDoc.GetElementsByTagName(elementName);
+        int count = Mathf.Min(nodes.Count, mainText.Length);
+
+        for (int i = 0; i < count; i++)
+        {
+            mainText[i].text = nodes[i].InnerText + "°C";
+        }
+
+        float[] values = new float[nodes.Count];
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            float.TryParse(nodes[i].InnerText, out values[i]);
+        }
+
+        //Rain Call
+
+        string urlRain = $"https://api.meteomatics.com/now/precip_1h:mm/{latlon}/xml?source=mix"; // Your XML link
+        www = UnityWebRequest.Get(urlRain);
+
+        auth = System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("lavieggmbh_kaupert_alex:uCUJ5bw77Y"));
+        www.SetRequestHeader("Authorization", "Basic " + auth);
+
+        yield return www.SendWebRequest();
 
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Error fetching XML: " + www.error);
-                yield break;
-            }
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Error fetching XML: " + www.error);
+            yield break;
+        }
 
-            string xmlText = www.downloadHandler.text;
-            XmlDocument xmlDoc = new XmlDocument();
+        xmlText = www.downloadHandler.text;
+        xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xmlText);
+
+        XmlNode nodeRain = xmlDoc.SelectSingleNode($"//{elementName}");
+
+        rainAmount.text = Convert.ToString(nodeRain.InnerText) + " mm";
+
+        //Wind Call
+         string urlWind = $"https://api.meteomatics.com/now/wind_speed_10m:kmh/{latlon}/xml?source=mix"; // Your XML link
+         www = UnityWebRequest.Get(urlWind);
+
+         www.SetRequestHeader("Authorization", "Basic " + auth);
+
+        yield return www.SendWebRequest();
+
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Error fetching XML: " + www.error);
+            yield break;
+        }
+
+        xmlText = www.downloadHandler.text;
+        xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xmlText);
+
+       XmlNode nodeWind = xmlDoc.SelectSingleNode($"//{elementName}");
+
+        windspeed.text = Convert.ToString(nodeWind.InnerText) + " km/h";
+
+        //UV Call
+
+        string urlUV = $"https://api.meteomatics.com/now/uv:idx/{latlon}/xml?source=mix"; // Your XML link
+        www = UnityWebRequest.Get(urlUV);
+
+        auth = System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("lavieggmbh_kaupert_alex:uCUJ5bw77Y"));
+        www.SetRequestHeader("Authorization", "Basic " + auth);
+
+        yield return www.SendWebRequest();
+
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Error fetching XML: " + www.error);
+            yield break;
+        }
+
+            xmlText = www.downloadHandler.text;
+            xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlText);
 
-            XmlNodeList nodes = xmlDoc.GetElementsByTagName(elementName);
+            XmlNode node = xmlDoc.SelectSingleNode($"//{elementName}");
 
-            // string[] values = new string[nodes.Count];
+            uvIdx.text = "Index " + Convert.ToString(node.InnerText);
 
-            for (int i = 0; i < 25; i++)
+
+
+
+        // Weather logic
+       /* if (Convert.ToInt32(nodeRain.InnerText) > 100)
+            catImage.sprite = wimdyCat;
+        else if (Convert.ToInt32(nodeWind.InnerText) > 50)
+            catImage.sprite = wetCat;
+        else */if (values[0] > 300)
+            catImage.sprite = cursedCat;
+        else if (values[0] > 250)
+            catImage.sprite = hellCat;
+        else if (values[0] > 200)
+            catImage.sprite = mathCat;
+        else if (values[0] > 150)
+            catImage.sprite = happiCat;
+        
+
+        // Daily min/max setup
+        int time = 24 - DateTime.Now.Hour;
+        float[] max = new float[7];
+        float[] min = new float[7];
+        for (int i = 0; i < 7; i++)
+        {
+            max[i] = float.MinValue;
+            min[i] = float.MaxValue;
+
+            int start = time + i * 24;
+            int end = start + 24;
+
+            for (int j = start; j < end && j < values.Length; j++)
             {
-                //Debug.Log($"{elementName} value: {nodes[i].InnerText}");
-                mainText[i].text = Convert.ToString(nodes[i].InnerText) + "°C";
+                if (values[j] > max[i]) max[i] = values[j];
+                if (values[j] < min[i]) min[i] = values[j];
             }
 
-            rain rain = FindFirstObjectByType<rain>();
-            wind wind = FindFirstObjectByType<wind>();
+            // Convert from tenths of a degree to degrees (if applicable)
+            min[i] /= 10f;
+            max[i] /= 10f;
 
-
-            int time = 24 - DateTime.Now.Hour;
-
-            float[] average = { 0, 0, 0, 0, 0, 0, 0 };
-            float[] max = { 0, 0, 0, 0, 0, 0, 0 };
-            float[] min = { 1000, 1000, 1000, 1000, 1000, 1000, 1000 };
-
-            float[] values = new float[nodes.Count];
-
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                if (float.TryParse(nodes[i].InnerText, out float parsedValue))
-                {
-                    values[i] = parsedValue;
-                    // Debug.Log($"Yay {i}");
-                }
-                else
-                {
-                    Debug.LogWarning($"Invalid number at index {i}: {nodes[i].InnerText}");
-                    values[i] = 0; // Or handle differently, e.g., skip or set to -1
-                }
-            }
-           // if (wind.wimdy > 100)
-            {
-                catImage.sprite = wimdyCat;
-            }
-            /*else*/ if (rain.wetness > 50)
-            {
-                catImage.sprite = wetCat;
-            }
-            else if (values[0] > 250)
-            {
-                catImage.sprite = hellCat;
-               // Debug.Log(values[0]);
-            }
-            else if (values[0] > 200)
-            {
-                catImage.sprite = mathCat;
-            }
-            else if (values[0] > 150)
-            {
-                catImage.sprite = happiCat;
-            }
-
-
-            int dayOne = time + 24;
-            int dayTwo = time + 48;
-            int dayThree = time + 72;
-            int dayFour = time + 96;
-            int dayFive = time + 120;
-            int daySix = time + 144;
-            int daySeven = time + 168;
-
-            for (int i = time + 1; i < dayOne; i++)
-            {
-                //average[0] += values[i];
-                if (values[i] > max[0])
-                    max[0] = values[i];
-
-                if (values[i] < min[0])
-                    min[0] = values[i];
-                //Debug.Log($"slay: { values[i]}");
-            }
-            for (int i = time + 24; i < dayTwo; i++)
-            {
-                //average[1] += values[i];
-                if (values[i] > max[1])
-                    max[1] = values[i];
-
-                if (values[i] < min[1])
-                    min[1] = values[i];
-                //Debug.Log($"{elementName} average[1]: {average[1]}");
-            }
-            for (int i = time + 48; i < dayThree; i++)
-            {
-                //average[2] += values[i];
-                if (values[i] > max[2])
-                    max[2] = values[i];
-
-                if (values[i] < min[2])
-                    min[2] = values[i];
-                //Debug.Log($"{elementName} average[2]: {average[2]}");
-            }
-            for (int i = time + 72; i < dayFour; i++)
-            {
-                //average[3] += values[i];
-
-                if (values[i] > max[3])
-                    max[3] = values[i];
-
-                if (values[i] < min[3])
-                    min[3] = values[i];
-
-                //Debug.Log($"{elementName} average[3]: {average[3]}");
-            }
-            for (int i = time + 96; i < dayFive; i++)
-            {
-                //average[4] += values[i];
-
-                if (values[i] > max[4])
-                    max[4] = values[i];
-
-                if (values[i] < min[4])
-                    min[4] = values[i];
-                //Debug.Log($"{elementName} average[4]: {average[4]}");
-            }
-            for (int i = time + 120; i < daySix; i++)
-            {
-                //average[5] += values[i];
-
-                if (values[i] > max[5])
-                    max[5] = values[i];
-
-                if (values[i] < min[5])
-                    min[5] = values[i];
-                //Debug.Log($"{elementName} average[5]: {average[5]}");
-            }
-            for (int i = time + 144; i < daySeven; i++)
-            {
-                //average[6] += values[i];
-
-                if (values[i] > max[6])
-                    max[6] = values[i];
-
-                if (values[i] < min[6])
-                    min[6] = values[i];
-                //Debug.Log($"{elementName} average[6]: {average[6]}");
-            }
-
-            for (int i = 0; i < 7; i++)
-            {
-                //average[i] = average[i] / 240;
-                //averageText[i].text = Convert.ToString(average[i]);
-                min[i] /= 10;
-                max[i] /= 10;
-                minText[i].text = Convert.ToString(min[i]) + "°C";
-                maxText[i].text = Convert.ToString(max[i]) + "°C";
-
-            }
-            
-            
-
+            minText[i].text = min[i].ToString("0.#") + "°C";
+            maxText[i].text = max[i].ToString("0.#") + "°C";
         }
     }
 
+    public static class JsonHelper
+    {
+        public static T[] FromJson<T>(string json)
+        {
+            string wrappedJson = "{\"Items\":" + json + "}";
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(wrappedJson);
+            return wrapper.Items;
+        }
+
+        [Serializable]
+        private class Wrapper<T>
+        {
+            public T[] Items;
+        }
+    }
 }
