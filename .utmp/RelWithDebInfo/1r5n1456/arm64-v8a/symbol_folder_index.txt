@@ -1,0 +1,1 @@
+C:\Users\AKaupert\Documents\WetterApp\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\1r5n1456\obj\arm64-v8a
