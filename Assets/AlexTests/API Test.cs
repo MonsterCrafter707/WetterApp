@@ -58,7 +58,7 @@ public class APITest : MonoBehaviour
         // Wait until GPS is ready
         while (!currentGPS.IsReady)
         {
-            Debug.Log("Waiting for GPS...");
+            //Debug.Log("Waiting for GPS...");
             yield return null;
         }
 
@@ -360,14 +360,15 @@ public class APITest : MonoBehaviour
             uvIdx.text = "Index " + Convert.ToString(node.InnerText);
 
 
-
+        string raining = rainAmount.text.Replace("m", "");
+        int rainingInt = Convert.ToInt32(raining.Replace(".", ""));
 
         // Weather logic
        /* if (Convert.ToInt32(nodeRain.InnerText) > 100)
             catImage.sprite = wimdyCat;
-        else if (Convert.ToInt32(nodeWind.InnerText) > 50)
+        else */if (rainingInt > 200)
             catImage.sprite = wetCat;
-        else */if (values[0] > 300)
+        else if (values[0] > 300)
             catImage.sprite = cursedCat;
         else if (values[0] > 250)
             catImage.sprite = hellCat;
@@ -375,6 +376,8 @@ public class APITest : MonoBehaviour
             catImage.sprite = mathCat;
         else if (values[0] > 150)
             catImage.sprite = happiCat;
+
+        
         
 
         // Daily min/max setup
