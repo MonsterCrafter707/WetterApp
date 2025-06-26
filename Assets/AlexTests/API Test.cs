@@ -359,14 +359,15 @@ public class APITest : MonoBehaviour
 
             uvIdx.text = "Index " + Convert.ToString(node.InnerText);
 
-
+        string winding = windspeed.text.Replace(" km/h", "");
+        int windingInt = Convert.ToInt32(winding.Replace(".", ""));
         string raining = rainAmount.text.Replace("m", "");
         int rainingInt = Convert.ToInt32(raining.Replace(".", ""));
 
         // Weather logic
-       /* if (Convert.ToInt32(nodeRain.InnerText) > 100)
+        if (windingInt > 100)
             catImage.sprite = wimdyCat;
-        else */if (rainingInt > 200)
+        else if (rainingInt > 200)
             catImage.sprite = wetCat;
         else if (values[0] > 300)
             catImage.sprite = cursedCat;
@@ -375,9 +376,7 @@ public class APITest : MonoBehaviour
         else if (values[0] > 200)
             catImage.sprite = mathCat;
         else if (values[0] > 150)
-            catImage.sprite = happiCat;
-
-        
+            catImage.sprite = happiCat;      
         
 
         // Daily min/max setup
