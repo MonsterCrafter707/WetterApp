@@ -1,0 +1,12 @@
+# ninja log v5
+121	5026	7726313690836961	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	2db7a7fb3b7a5c4d
+100	5051	7726313690852080	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9f630c4d913cea3b
+19	5102	7726313690927362	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	65d505bb2917d56f
+1	5114	7726313691299324	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	2108330c63bd065d
+111	5745	7726313698311131	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	8f57fd59f5998bce
+5102	5809	7726313699015612	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8ae1b798d25a6420
+27	6104	7726313701966759	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	c08974aa97a41dc4
+5810	6114	7726313701668464	C:/Users/RFalk/Weather App Location/WetterApp/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/621k3i24/obj/arm64-v8a/libswappywrapper.so	4ebd28f8d194910a
+5036	7357	7726313714681532	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	5ecc849f8488cadf
+5051	7606	7726313717116836	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	473da1c4a68f4eec
+7606	7733	7726313718424833	C:/Users/RFalk/Weather App Location/WetterApp/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/621k3i24/obj/arm64-v8a/libgame.so	a865b6c7d2b8706a

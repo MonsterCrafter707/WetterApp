@@ -58,7 +58,7 @@ public class APITest : MonoBehaviour
         // Wait until GPS is ready
         while (!currentGPS.IsReady)
         {
-            //Debug.Log("Waiting for GPS...");
+            Debug.Log("Waiting for GPS...");
             yield return null;
         }
 
