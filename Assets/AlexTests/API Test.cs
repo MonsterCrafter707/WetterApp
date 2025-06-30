@@ -33,6 +33,7 @@ public class APITest : MonoBehaviour
     public Sprite mathCat;
     public Sprite happiCat;
     public Sprite cursedCat;
+    public Sprite iceCat;
 
     public string latitude;
     public string longitude;
@@ -365,7 +366,7 @@ public class APITest : MonoBehaviour
         int rainingInt = Convert.ToInt32(raining.Replace(".", ""));
 
         // Weather logic
-        if (windingInt > 100)
+        if (windingInt > 300)
             catImage.sprite = wimdyCat;
         else if (rainingInt > 200)
             catImage.sprite = wetCat;
@@ -376,7 +377,9 @@ public class APITest : MonoBehaviour
         else if (values[0] > 200)
             catImage.sprite = mathCat;
         else if (values[0] > 150)
-            catImage.sprite = happiCat;      
+            catImage.sprite = happiCat;
+        else if (values[0] < 50)
+            catImage.sprite = iceCat;
         
 
         // Daily min/max setup
